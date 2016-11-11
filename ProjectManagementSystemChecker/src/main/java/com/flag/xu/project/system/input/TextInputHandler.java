@@ -8,8 +8,7 @@ package com.flag.xu.project.system.input;
  */
 public class TextInputHandler extends InputHandler {
 
-    public String[] handleInput(String path) {
-        System.out.println(getPathType(path));
+    public Object handleInput(String path) {
         if (getPathType(path).endsWith("plain")) {
             System.out.println(this.getClass().getSimpleName() + " handle");
         } else {

@@ -42,7 +42,7 @@ class HeadHandler extends InputHandler{
         super(inputPipeLine);
     }
 
-    public String[] handleInput(String path) {
+    public Object handleInput(String path) {
         return new String[0];
     }
 }
@@ -53,7 +53,7 @@ class TailHandler extends InputHandler{
         super(inputPipeLine);
     }
 
-    public String[] handleInput(String path) {
+    public Object handleInput(String path) {
         return new String[0];
     }
 }

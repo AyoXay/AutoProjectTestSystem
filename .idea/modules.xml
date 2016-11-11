@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://F://AutoProjectTestSystem/AutoProjectTestSystem.iml" filepath="F://AutoProjectTestSystem/AutoProjectTestSystem.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AutoProjectTestSystem.iml" filepath="$PROJECT_DIR$/AutoProjectTestSystem.iml" />
       <module fileurl="file://$PROJECT_DIR$/ProjectManagementSystemChecker/ProjectManagementSystemChecker.iml" filepath="$PROJECT_DIR$/ProjectManagementSystemChecker/ProjectManagementSystemChecker.iml" />
     </modules>
   </component>

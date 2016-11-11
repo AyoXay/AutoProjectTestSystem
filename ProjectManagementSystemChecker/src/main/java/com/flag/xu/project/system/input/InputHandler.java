@@ -23,7 +23,7 @@ public abstract class InputHandler {
         this.inputPipeLine = inputPipeLine;
     }
 
-    public abstract String[] handleInput(String path);
+    public abstract Object handleInput(String path);
 
     protected String getPathType(String path){
         assert path != null;

@@ -5,7 +5,7 @@ package com.flag.xu.project.system.input;
  * @Create 2016-11-10-15:18
  */
 public class XmlInputHandler extends InputHandler {
-    public String[] handleInput(String path) {
+    public Object handleInput(String path) {
         if (getPathType(path).endsWith("xml")) {
             System.out.println(this.getClass().getSimpleName() + " handle");
         } else {
