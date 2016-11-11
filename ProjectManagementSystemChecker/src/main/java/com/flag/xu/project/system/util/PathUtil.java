@@ -24,7 +24,7 @@ public class PathUtil {
         stringBuilder.append(fileName.startsWith("/") ? fileName : "/" + fileName);
 
         if (!StringUtil.isBlank(suffix))
-            stringBuilder.append(suffix.startsWith("\\.") ? suffix : "." + suffix);
+            stringBuilder.append(suffix.startsWith(".") ? suffix : "." + suffix);
         try {
             url = clazz.getResource(stringBuilder.toString());
             path = Paths.get(url.toURI());
