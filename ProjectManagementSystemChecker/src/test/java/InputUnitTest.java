@@ -13,7 +13,7 @@ public class InputUnitTest {
     public void test_input_handler_chain() throws NoHandlerInPipeLine {
         InputPipeLine pipeLine = new InputPipeLine();
         pipeLine.addInputHandler(new XmlInputHandler())
-        .addInputHandler(new TextInputHandler()).startHandle("c:/what/bye/hello.txt");
+        .addInputHandler(new TextInputHandler()).startHandle("/hello.txt");
     }
 
     @Test

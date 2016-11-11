@@ -19,11 +19,13 @@ public class InputPipeLine {
     }
 
     public InputPipeLine addInputHandler(InputHandler inputHandler){
-        InputHandler temp = tail.prevHandler;
-        tail.prevHandler = inputHandler;
-        inputHandler.nextHandler = tail;
-        inputHandler.prevHandler = temp;
-        temp.nextHandler = inputHandler;
+        synchronized (this) {
+            InputHandler temp = tail.prevHandler;
+            tail.prevHandler = inputHandler;
+            inputHandler.nextHandler = tail;
+            inputHandler.prevHandler = temp;
+            temp.nextHandler = inputHandler;
+        }
         return this;
     }
 

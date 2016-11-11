@@ -1,5 +1,6 @@
 package com.flag.xu.project.system.pojo;
 
+import com.flag.xu.project.system.annotation.Property;
 import com.flag.xu.project.system.annotation.PropertyIgnore;
 
 /**
@@ -10,6 +11,7 @@ public class XmlTestPojo {
     private String name;
     @PropertyIgnore
     private boolean bool;
+    @Property(value = "id")
     private int anInt;
     @PropertyIgnore
     public String getName() {
