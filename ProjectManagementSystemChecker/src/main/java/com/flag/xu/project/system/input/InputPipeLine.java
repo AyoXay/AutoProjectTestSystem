@@ -43,7 +43,7 @@ class HeadHandler extends InputHandler{
     }
 
     public Object handleInput(String path) {
-        return new String[0];
+        return null;
     }
 }
 
@@ -54,6 +54,6 @@ class TailHandler extends InputHandler{
     }
 
     public Object handleInput(String path) {
-        return new String[0];
+        return null;
     }
 }
