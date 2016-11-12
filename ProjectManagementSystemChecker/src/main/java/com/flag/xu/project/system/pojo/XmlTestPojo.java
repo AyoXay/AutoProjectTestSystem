@@ -37,4 +37,9 @@ public class XmlTestPojo {
     public void setAnInt(int anInt) {
         this.anInt = anInt;
     }
+
+    @Override
+    public String toString() {
+        return "Name : " + name + "\tbool : " + bool + "\tanInt : " + anInt;
+    }
 }

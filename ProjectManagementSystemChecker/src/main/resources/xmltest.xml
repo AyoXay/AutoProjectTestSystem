@@ -1,0 +1,5 @@
+<XmlTestPojo>
+    <name>lophix</name>
+    <bool>true</bool>
+    <anInt>10</anInt>
+</XmlTestPojo>
