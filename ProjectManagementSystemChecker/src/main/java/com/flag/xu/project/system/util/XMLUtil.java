@@ -62,6 +62,7 @@ public class XMLUtil {
         return obj;
     }
 
+    //TODO Optimize parameter handle by state pattern
     private static Object parameter(Field field, Element foo) {
         Class fieldType = field.getType();
         Object param;
