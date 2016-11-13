@@ -2,6 +2,7 @@ package com.flag.xu.project.system.util;
 
 import com.flag.xu.project.system.annotation.PropertyIgnore;
 import com.flag.xu.project.system.config.loader.PropertiesFileConfig;
+import com.flag.xu.project.system.param.cast.ParamCast;
 import com.flag.xu.project.system.pojo.enums.StandardDataType;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
@@ -62,27 +63,7 @@ public class XMLUtil {
         return obj;
     }
 
-    //TODO Optimize parameter handle by state pattern
     private static Object parameter(Field field, Element foo) {
-        Class fieldType = field.getType();
-        Object param;
-        if (fieldType.equals(StandardDataType.DOUBLE.getType()) || fieldType.equals(StandardDataType.DOUBLE_CLASS.getType())) {
-            param = Double.valueOf(foo.elementText(field.getName()) == null ? "0" : foo.elementText(field.getName()));
-        } else if (fieldType.equals(StandardDataType.INT.getType()) || fieldType.equals(StandardDataType.INTEGER.getType())) {
-            param = Integer.valueOf(foo.elementText(field.getName()) == null ? "0" : foo.elementText(field.getName()));
-        } else if (fieldType.equals(StandardDataType.LONG.getType()) || fieldType.equals(StandardDataType.LONG_CLASS.getType())) {
-            param = Long.valueOf(foo.elementText(field.getName()) == null ? "0" : foo.elementText(field.getName()));
-        } else if (fieldType.equals(StandardDataType.FLOAT.getType()) || fieldType.equals(StandardDataType.FLOAT_CLASS.getType())) {
-            param = Float.valueOf(foo.elementText(field.getName()) == null ? "0" : foo.elementText(field.getName()));
-        } else if (fieldType.equals(StandardDataType.BOOLEAN.getType()) || fieldType.equals(StandardDataType.BOOLEAN_CLASS.getType())) {
-            param = Boolean.valueOf(foo.elementText(field.getName()) == null ? "false" : foo.elementText(field.getName()));
-        } else if (fieldType.equals(StandardDataType.SHORT.getType()) || fieldType.equals(StandardDataType.SHORT_CLASS.getType())) {
-            param = Short.valueOf(foo.elementText(field.getName()) == null ? "0" : foo.elementText(field.getName()));
-        } else if (fieldType.equals(StandardDataType.BYTE.getType()) || fieldType.equals(StandardDataType.BYTE_CLASS.getType())) {
-            param = Byte.valueOf(foo.elementText(field.getName()) == null ? "0" : foo.elementText(field.getName()));
-        } else {
-            param = foo.elementText(field.getName());
-        }
-        return param;
+       return new ParamCast().paramCast(field, foo);
     }
 }
