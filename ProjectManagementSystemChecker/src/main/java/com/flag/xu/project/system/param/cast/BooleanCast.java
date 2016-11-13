@@ -14,7 +14,7 @@ public class BooleanCast extends ParamCast {
     @Override
     public Object paramCast(Field field, Element foo, Method method) throws AnnotationConflictException {
         Class fieldType = field.getType();
-        if (fieldType.equals(StandardDataType.INT.getType()) || fieldType.equals(StandardDataType.INTEGER.getType())) {
+        if (fieldType.equals(StandardDataType.BOOLEAN.getType()) || fieldType.equals(StandardDataType.BOOLEAN_CLASS.getType())) {
             Boolean param = Boolean.valueOf(foo.elementText(getParamName(field, method)) == null ? "false" : foo.elementText(getParamName(field, method)));
             return param;
         } else {

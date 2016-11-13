@@ -14,7 +14,7 @@ public class DoubleCast extends ParamCast {
     @Override
     public Object paramCast(Field field, Element foo, Method method) throws AnnotationConflictException {
         Class fieldType = field.getType();
-        if (fieldType.equals(StandardDataType.INT.getType()) || fieldType.equals(StandardDataType.INTEGER.getType())) {
+        if (fieldType.equals(StandardDataType.DOUBLE.getType()) || fieldType.equals(StandardDataType.DOUBLE_CLASS.getType())) {
             Double param = Double.valueOf(foo.elementText(getParamName(field, method)) == null ? "0" : foo.elementText(getParamName(field, method)));
             return param;
         } else{
