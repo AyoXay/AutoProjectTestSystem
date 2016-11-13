@@ -1,6 +1,6 @@
 package com.flag.xu.project.system.input;
 
-import com.flag.xu.project.system.input.exception.NoHandlerInPipeLine;
+import com.flag.xu.project.system.exception.NoHandlerInPipeLineException;
 
 /**
  * @Authuor Administrator
@@ -29,11 +29,11 @@ public class InputPipeLine {
         return this;
     }
 
-    public void startHandle(String path) throws NoHandlerInPipeLine {
+    public void startHandle(String path) throws NoHandlerInPipeLineException {
         if (path == null)
             return;
         if (head.nextHandler instanceof TailHandler)
-            throw new NoHandlerInPipeLine();
+            throw new NoHandlerInPipeLineException();
         head.nextHandler.handleInput(path);
     }
 }

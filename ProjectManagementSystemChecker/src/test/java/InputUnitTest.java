@@ -1,23 +1,19 @@
+import com.flag.xu.project.system.exception.NoHandlerInPipeLineException;
 import com.flag.xu.project.system.input.InputPipeLine;
 import com.flag.xu.project.system.input.TextInputHandler;
 import com.flag.xu.project.system.input.XmlInputHandler;
-import com.flag.xu.project.system.input.exception.NoHandlerInPipeLine;
 import com.flag.xu.project.system.pojo.XmlTestPojo;
 import com.flag.xu.project.system.util.PathUtil;
 import com.flag.xu.project.system.util.XMLUtil;
-import com.sun.deploy.security.DeployURLClassPathCallback;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @Authuor Administrator
@@ -25,7 +21,7 @@ import java.util.List;
  */
 public class InputUnitTest {
     @Test
-    public void test_input_handler_chain() throws NoHandlerInPipeLine {
+    public void test_input_handler_chain() throws NoHandlerInPipeLineException {
         InputPipeLine pipeLine = new InputPipeLine();
         pipeLine.addInputHandler(new XmlInputHandler())
         .addInputHandler(new TextInputHandler()).startHandle("/hello.txt");
@@ -37,7 +33,7 @@ public class InputUnitTest {
     }
 
     @Test
-    public void test_inputhandler_nohandler() throws NoHandlerInPipeLine {
+    public void test_inputhandler_nohandler() throws NoHandlerInPipeLineException {
         new InputPipeLine().startHandle("c:/slkfj/iwej/sss.gif");
     }
 

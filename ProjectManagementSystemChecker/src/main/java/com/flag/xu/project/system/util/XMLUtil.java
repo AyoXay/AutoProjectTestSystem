@@ -2,16 +2,14 @@ package com.flag.xu.project.system.util;
 
 import com.flag.xu.project.system.annotation.PropertyIgnore;
 import com.flag.xu.project.system.config.loader.PropertiesFileConfig;
+import com.flag.xu.project.system.exception.AnnotationConflictException;
 import com.flag.xu.project.system.param.cast.ParamCast;
-import com.flag.xu.project.system.pojo.enums.StandardDataType;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Iterator;
-import java.util.List;
 
 /**
  * @Authuor Administrator
@@ -55,7 +53,7 @@ public class XMLUtil {
                 if (setMethod.isAnnotationPresent(PropertyIgnore.class))
                     continue;
                 else
-                    setMethod.invoke(obj, parameter(field, element));
+                    setMethod.invoke(obj, parameter(field, element, setMethod));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -63,7 +61,13 @@ public class XMLUtil {
         return obj;
     }
 
-    private static Object parameter(Field field, Element foo) {
-       return new ParamCast().paramCast(field, foo);
+    private static Object parameter(Field field, Element foo, Method method) {
+        Object param = null;
+        try {
+            param =  new ParamCast().paramCast(field, foo, method);
+        } catch (AnnotationConflictException e) {
+            e.printStackTrace();
+        }
+        return param;
     }
 }
