@@ -10,6 +10,8 @@ public class InputPipeLine {
 
     final InputHandler head;
     final InputHandler tail;
+    private Object obj = null;
+    private boolean initObj;
 
     public InputPipeLine(){
         head = new HeadHandler(this);
@@ -29,12 +31,20 @@ public class InputPipeLine {
         return this;
     }
 
+    public Object getObj(){
+        while(!initObj){
+        }
+        return obj;
+    }
+
     public void startHandle(String path) throws NoHandlerInPipeLineException {
+        initObj = false;
         if (path == null)
             return;
         if (head.nextHandler instanceof TailHandler)
             throw new NoHandlerInPipeLineException();
-        head.nextHandler.handleInput(path);
+        obj = head.nextHandler.handleInput(path);
+        initObj = true;
     }
 }
 

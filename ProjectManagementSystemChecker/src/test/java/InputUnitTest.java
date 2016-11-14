@@ -24,7 +24,8 @@ public class InputUnitTest {
     public void test_input_handler_chain() throws NoHandlerInPipeLineException {
         InputPipeLine pipeLine = new InputPipeLine();
         pipeLine.addInputHandler(new XmlInputHandler())
-        .addInputHandler(new TextInputHandler()).startHandle("/hello.txt");
+        .addInputHandler(new TextInputHandler()).startHandle("xmltest.xml");
+        System.out.println(pipeLine.getObj());
     }
 
     @Test
