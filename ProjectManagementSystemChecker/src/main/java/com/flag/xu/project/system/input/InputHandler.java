@@ -1,10 +1,5 @@
 package com.flag.xu.project.system.input;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
 /**
  * Input handler abstract
  *
@@ -24,17 +19,4 @@ public abstract class InputHandler {
     }
 
     public abstract Object handleInput(String path);
-
-    protected String getPathType(String path){
-        assert path != null;
-        String result = "";
-        Path source = Paths.get(path);
-        try {
-            result = Files.probeContentType(source);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return result == null ? "" : result;
-    }
-
 }
