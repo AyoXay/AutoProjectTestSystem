@@ -5,21 +5,21 @@ package com.flag.xu.project.system.pojo.enums;
  */
 public enum StandardDataType {
     INT(int.class),
-    INTEGER(Integer.TYPE),
+    INTEGER(Integer.class),
     LONG(long.class),
-    LONG_CLASS(Long.TYPE),
+    LONG_CLASS(Long.class),
     DOUBLE(double.class),
-    DOUBLE_CLASS(Double.TYPE),
+    DOUBLE_CLASS(Double.class),
     FLOAT(float.class),
-    FLOAT_CLASS(Float.TYPE),
+    FLOAT_CLASS(Float.class),
     BOOLEAN(boolean.class),
-    BOOLEAN_CLASS(Boolean.TYPE),
+    BOOLEAN_CLASS(Boolean.class),
     BYTE(byte.class),
-    BYTE_CLASS(Byte.TYPE),
+    BYTE_CLASS(Byte.class),
     CHAR(char.class),
-    CHARACTER(Character.TYPE),
+    CHARACTER(Character.class),
     SHORT(short.class),
-    SHORT_CLASS(Short.TYPE);
+    SHORT_CLASS(Short.class);
 
     private Class type;
 
