@@ -1,5 +1,7 @@
 package com.flag.xu.project.system.util;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.file.Path;
@@ -15,15 +17,16 @@ public class PathUtil {
     }
 
     public static <T> Path getPath(Class<T> clazz, String fileName, String suffix) {
-        if (StringUtil.isBlank(fileName))
+        if (StringUtils.isEmpty(fileName))
             return null;
+
         URL url;
         Path path = null;
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(fileName.startsWith("/") ? fileName : "/" + fileName);
 
-        if (!StringUtil.isBlank(suffix))
+        if (StringUtils.isNotEmpty(suffix))
             stringBuilder.append(suffix.startsWith(".") ? suffix : "." + suffix);
         try {
             url = clazz.getResource(stringBuilder.toString());

@@ -39,9 +39,7 @@ public class PropertiesFileConfig {
                     properties.load(Files.newInputStream(path));
                     isInit = true;
                     Thread.sleep(60 * 1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
