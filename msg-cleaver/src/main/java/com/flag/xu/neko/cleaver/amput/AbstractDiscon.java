@@ -35,6 +35,9 @@ public abstract class AbstractDiscon<T extends Path> {
      * @return 切割后的字符串
      */
     public String unpack(T path, int offset) {
+        if (path == null){
+            throw new NullPointerException("path is null");
+        }
         StringBuilder result = new StringBuilder();
         try {
             List<String> lines = Files.readAllLines(path);

@@ -2,8 +2,10 @@ package com.flag.xu.neko.cleaver;
 
 import com.flag.xu.neko.cleaver.amput.AbstractDiscon;
 import com.flag.xu.neko.cleaver.amput.DefaultMessageDiacon;
+import com.flag.xu.neko.cleaver.util.FileOutputUtil;
 import com.flag.xu.project.system.util.PathUtil;
 
+import java.io.IOException;
 import java.nio.file.Path;
 
 /**
@@ -16,6 +18,11 @@ public class MainAccess {
     public static void main(String[] args) {
         Path path = PathUtil.getPath(MainAccess.class, "file/111.txt");
         AbstractDiscon<Path> discon = new DefaultMessageDiacon<>();
-        System.out.println(discon.unpack(path, 17));
+        String result = discon.unpack(path, 17);
+        try {
+            FileOutputUtil.output(result, "hehe.txt", true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
