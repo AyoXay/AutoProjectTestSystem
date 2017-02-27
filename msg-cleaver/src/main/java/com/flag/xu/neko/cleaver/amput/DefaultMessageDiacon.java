@@ -2,6 +2,7 @@ package com.flag.xu.neko.cleaver.amput;
 
 import com.sun.istack.internal.NotNull;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
@@ -12,7 +13,7 @@ import java.util.List;
  * @version 1.0-SNAPSHOT
  * @since 2017-02-24 17:12
  */
-public class DefaultMessageDiacon<T> extends AbstractDiscon<T> {
+public class DefaultMessageDiacon<T extends Path> extends AbstractDiscon<T> {
 
     @Override
     public String unpack(@NotNull String input, int offset) {

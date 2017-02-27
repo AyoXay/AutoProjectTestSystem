@@ -11,5 +11,13 @@
 
     <artifactId>msg-cleaver</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.flag.xu.neko</groupId>
+            <artifactId>project.management.system</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
 
 </project>
