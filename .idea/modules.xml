@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/AutoProjectTestSystem.iml" filepath="$PROJECT_DIR$/AutoProjectTestSystem.iml" />
       <module fileurl="file://$PROJECT_DIR$/ProjectManagementSystemChecker/ProjectManagementSystemChecker.iml" filepath="$PROJECT_DIR$/ProjectManagementSystemChecker/ProjectManagementSystemChecker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/msg-cleaver/msg-cleaver.iml" filepath="$PROJECT_DIR$/msg-cleaver/msg-cleaver.iml" />
     </modules>
   </component>
 </project>
