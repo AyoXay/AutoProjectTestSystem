@@ -16,11 +16,11 @@ import java.nio.file.Path;
  */
 public class MainAccess {
     public static void main(String[] args) {
-        Path path = PathUtil.getPath(MainAccess.class, "file/111.txt");
+        Path path = PathUtil.getPath(MainAccess.class, "file/1224.txt");
         AbstractDiscon<Path> discon = new DefaultMessageDiacon<>();
         String result = discon.unpack(path, 17);
         try {
-            FileOutputUtil.output(result, "hehe.txt", true);
+            FileOutputUtil.output(result, "file/r1224.txt", true);
         } catch (IOException e) {
             e.printStackTrace();
         }
