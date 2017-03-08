@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>com.flag.xu.neko</groupId>
-            <artifactId>neko-core</artifactId>
+            <artifactId>msg-cleaver</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 
