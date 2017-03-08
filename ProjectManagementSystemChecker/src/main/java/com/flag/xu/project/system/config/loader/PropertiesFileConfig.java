@@ -1,8 +1,7 @@
 package com.flag.xu.project.system.config.loader;
 
-import com.flag.xu.project.system.util.PathUtil;
+import com.flag.xu.neko.core.utils.PathUtil;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;

@@ -1,4 +1,4 @@
-package com.flag.xu.project.system.util;
+package com.flag.xu.neko.core.utils;
 
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;

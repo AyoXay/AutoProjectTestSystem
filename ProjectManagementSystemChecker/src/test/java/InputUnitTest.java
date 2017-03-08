@@ -1,9 +1,9 @@
+import com.flag.xu.neko.core.utils.PathUtil;
 import com.flag.xu.project.system.exception.NoHandlerInPipeLineException;
 import com.flag.xu.project.system.input.InputPipeLine;
 import com.flag.xu.project.system.input.TextInputHandler;
 import com.flag.xu.project.system.input.XmlInputHandler;
 import com.flag.xu.project.system.pojo.XmlTestPojo;
-import com.flag.xu.project.system.util.PathUtil;
 import com.flag.xu.project.system.util.XMLUtil;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -35,7 +35,7 @@ public class InputUnitTest {
 
     @Test
     public void test_inputhandler_nohandler() throws NoHandlerInPipeLineException {
-        new InputPipeLine().startHandle("c:/slkfj/iwej/sss.gif");
+//        new InputPipeLine().startHandle("c:/slkfj/iwej/sss.gif");
     }
 
     @Test
