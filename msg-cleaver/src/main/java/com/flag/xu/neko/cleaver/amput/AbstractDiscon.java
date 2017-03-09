@@ -5,6 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -39,21 +40,45 @@ public abstract class AbstractDiscon<T extends Path> {
             throw new NullPointerException("path is null");
         }
         StringBuilder result = new StringBuilder();
+        List<String> lines = unpack0(path, offset);
+        lines.forEach(s -> {
+            if (StringUtils.isNotEmpty(s)) {
+                result.append(s);
+            }
+            result.append(System.getProperty("line.separator"));
+        });
+        return result.toString();
+    }
+
+    /**
+     * 切割消息文件，去除无用字符，取出主消息体
+     * 以空行作为分隔符，存放在一个字符串list中
+     *
+     * @param path 文件path
+     * @param offset 偏移量
+     * @return 切割后字符串list
+     */
+    public List<String> unpack0(T path, int offset) {
+        if (path == null) {
+            throw new NullPointerException("path is null");
+        }
+        List<String> resList = new ArrayList<>();
+        StringBuilder tmp = new StringBuilder();
         try {
             List<String> lines = Files.readAllLines(path);
             lines.forEach(s -> {
                 if (StringUtils.isEmpty(s)) {
-                    result.append(System.getProperty("line.separator"));
-                    result.append(System.getProperty("line.separator"));
+                    resList.add(tmp.toString());
+                    tmp.delete(0, tmp.length());
                 }
                 if (StringUtils.isNotEmpty(s) && !s.startsWith("/")) {
-                    msgNormalize(result, s.substring(offset));
+                    msgNormalize(tmp, s.substring(offset));
                 }
             });
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return result.toString();
+        return resList;
     }
 
     /**
