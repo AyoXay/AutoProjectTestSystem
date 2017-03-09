@@ -11,21 +11,26 @@ public class BytesUtil {
 
     /**
      * str to bytes convert some hex string like "ff fe fc 22 22 03 03"
+     *
      * @param string string
-     * @param regex regex
+     * @param regex  regex
      * @param offset offset
      * @param length length
      * @return byte array
      */
-    public static byte[] str2Bytes(String string, String regex, int offset, int length){
+    public static byte[] str2Bytes(String string, String regex, int offset, int length) {
         String[] strings = string.split(regex);
-        if (strings.length < offset + length){
+        if (strings.length < offset + length - 1) {
             throw new ArrayIndexOutOfBoundsException();
         }
         byte[] bytes = new byte[length];
-        for (int i = 0; i < length; i++){
+        for (int i = 0; i < length; i++) {
             bytes[i] = (byte) Integer.parseInt(strings[offset + i], 16);
         }
         return bytes;
+    }
+
+    public static byte[] str2Bytes(String string, String regex){
+        return str2Bytes(string, regex, 0, string.split(regex).length);
     }
 }
