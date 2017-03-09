@@ -1,6 +1,6 @@
 package com.flag.xu.project.system.input;
 
-import com.flag.xu.project.system.util.PathUtil;
+import com.flag.xu.neko.core.utils.PathUtil;
 import com.flag.xu.project.system.util.XMLUtil;
 import org.dom4j.Document;
 import org.dom4j.io.SAXReader;

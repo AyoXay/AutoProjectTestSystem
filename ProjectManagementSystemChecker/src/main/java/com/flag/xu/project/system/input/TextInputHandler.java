@@ -1,6 +1,6 @@
 package com.flag.xu.project.system.input;
 
-import com.flag.xu.project.system.util.PathUtil;
+import com.flag.xu.neko.core.utils.PathUtil;
 
 import java.io.IOException;
 import java.io.InputStream;

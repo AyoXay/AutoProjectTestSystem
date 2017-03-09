@@ -1,6 +1,5 @@
-package com.flag.xu.neko.cleaver.util;
+package com.flag.xu.neko.core.utils;
 
-import com.flag.xu.project.system.util.PathUtil;
 import com.sun.istack.internal.NotNull;
 
 import java.io.IOException;
