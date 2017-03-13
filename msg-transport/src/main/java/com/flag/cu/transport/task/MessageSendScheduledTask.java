@@ -19,6 +19,8 @@ public class MessageSendScheduledTask implements Runnable {
 
     private static final Logger LOG = LogManager.getLogger(MessageSendScheduledTask.class);
 
+    private BlockingQueue<byte[]> queue = null;
+
     private final ChannelHandlerContext ctx;
 
     public MessageSendScheduledTask(ChannelHandlerContext ctx) {
@@ -30,10 +32,11 @@ public class MessageSendScheduledTask implements Runnable {
         final Map<String, BlockingQueue<byte[]>> queueMap = MessageCleaverScheduledTask.QUEUE_MAP;
         final String realTimeMsgId = MessageCleaverScheduledTask.realTimeMsgId;
         if (realTimeMsgId != null) {
-            BlockingQueue<byte[]> queue = queueMap.get(realTimeMsgId);
+            if (queue == null || queue.isEmpty()) {
+                queue = queueMap.get(realTimeMsgId);
+            }
             try {
-                byte[] bytes = queue.take();
-                ctx.writeAndFlush(bytes);
+                ctx.writeAndFlush(queue.take());
             } catch (InterruptedException e) {
                 LOG.error("Take msg from queue has thrown an exception, cause by {}", e.getMessage());
             }
