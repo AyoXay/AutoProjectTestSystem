@@ -5,6 +5,7 @@ import com.flag.xu.neko.core.utils.PathUtil;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
+import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,16 +30,8 @@ public class MessageSendScheduledTask implements Runnable {
 
     private final ChannelHandlerContext ctx;
 
-    private static final Producer<String, byte[]> producer;
-
     static{
-        Properties props = new Properties();
-        try {
-            props.load(Files.newInputStream(PathUtil.getPath(MessageCleaverScheduledTask.class, "kafka.properties")));
-        } catch (IOException e) {
-            LOG.error("kafka producer start failure, {}", e.getMessage());
-        }
-        producer = new KafkaProducer<>(props);
+
     }
 
     public MessageSendScheduledTask(ChannelHandlerContext ctx) {
@@ -49,16 +42,29 @@ public class MessageSendScheduledTask implements Runnable {
     public void run() {
         final Map<String, BlockingQueue<byte[]>> queueMap = MessageCleaverScheduledTask.QUEUE_MAP;
         final String realTimeMsgId = MessageCleaverScheduledTask.realTimeMsgId;
+        Producer<String, byte[]> producer = getProducer();
         if (realTimeMsgId != null) {
             if (queue == null || queue.isEmpty()) {
                 queue = queueMap.get(realTimeMsgId);
             }
             try {
-                ctx.writeAndFlush(queue.take());
+                byte[] bytes = queue.take();
+                ctx.writeAndFlush(bytes);
+                producer.send(new ProducerRecord<>("topic_T", bytes));
+                producer.close();
             } catch (InterruptedException e) {
                 LOG.error("Take msg from queue has thrown an exception, cause by {}", e.getMessage());
             }
         }
     }
 
+    private Producer<String, byte[]> getProducer(){
+        Properties props = new Properties();
+        try {
+            props.load(Files.newInputStream(PathUtil.getPath(MessageCleaverScheduledTask.class, "kafka.properties")));
+        } catch (IOException e) {
+            LOG.error("kafka producer start failure, {}", e.getMessage());
+        }
+        return new KafkaProducer<>(props);
+    }
 }
