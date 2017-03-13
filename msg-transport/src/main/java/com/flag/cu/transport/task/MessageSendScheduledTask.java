@@ -42,7 +42,6 @@ public class MessageSendScheduledTask implements Runnable {
     public void run() {
         final Map<String, BlockingQueue<byte[]>> queueMap = MessageCleaverScheduledTask.QUEUE_MAP;
         final String realTimeMsgId = MessageCleaverScheduledTask.realTimeMsgId;
-        Producer<String, byte[]> producer = getProducer();
         if (realTimeMsgId != null) {
             if (queue == null || queue.isEmpty()) {
                 queue = queueMap.get(realTimeMsgId);
@@ -50,6 +49,7 @@ public class MessageSendScheduledTask implements Runnable {
             try {
                 byte[] bytes = queue.take();
                 ctx.writeAndFlush(bytes);
+                Producer<String, byte[]> producer = getProducer();
                 producer.send(new ProducerRecord<>("topic_T", bytes));
                 producer.close();
             } catch (InterruptedException e) {
