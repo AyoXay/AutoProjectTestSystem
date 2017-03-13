@@ -1,11 +1,17 @@
 package com.flag.cu.transport.task;
 
 import com.flag.xu.neko.cleaver.task.MessageCleaverScheduledTask;
+import com.flag.xu.neko.core.utils.PathUtil;
 import io.netty.channel.ChannelHandlerContext;
+import org.apache.kafka.clients.producer.KafkaProducer;
+import org.apache.kafka.clients.producer.Producer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
 
 /**
@@ -22,6 +28,18 @@ public class MessageSendScheduledTask implements Runnable {
     private BlockingQueue<byte[]> queue = null;
 
     private final ChannelHandlerContext ctx;
+
+    private static final Producer<String, byte[]> producer;
+
+    static{
+        Properties props = new Properties();
+        try {
+            props.load(Files.newInputStream(PathUtil.getPath(MessageCleaverScheduledTask.class, "kafka.properties")));
+        } catch (IOException e) {
+            LOG.error("kafka producer start failure, {}", e.getMessage());
+        }
+        producer = new KafkaProducer<>(props);
+    }
 
     public MessageSendScheduledTask(ChannelHandlerContext ctx) {
         this.ctx = ctx;
