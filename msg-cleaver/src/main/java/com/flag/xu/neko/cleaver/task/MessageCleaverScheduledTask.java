@@ -47,9 +47,12 @@ public class MessageCleaverScheduledTask implements Runnable {
         String fileName = properties.getProperty("name");
         Integer offset = Integer.valueOf(properties.getProperty("offset") != null ? properties.getProperty("offset") : "0");
         realTimeMsgId = propPath + fileName;
-        if (QUEUE_MAP.get(realTimeMsgId) == null || QUEUE_MAP.get(realTimeMsgId).isEmpty()) {
+        BlockingQueue<byte[]> queue = QUEUE_MAP.get(realTimeMsgId);
+        if (queue == null || queue.isEmpty()) {
             List<String> msg = discon.unpack0(PathUtil.getPath(propPath, fileName), offset);
-            BlockingQueue<byte[]> queue = new LinkedBlockingQueue<>();
+            if (queue == null) {
+                queue = new LinkedBlockingQueue<>();
+            }
             submitMsg2Queue(msg, queue);
             QUEUE_MAP.putIfAbsent(realTimeMsgId, queue);
         } else {
