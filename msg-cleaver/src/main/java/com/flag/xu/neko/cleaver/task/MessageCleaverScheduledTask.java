@@ -63,6 +63,12 @@ public class MessageCleaverScheduledTask implements Runnable {
      * @param queue the queue
      */
     private void submitMsg2Queue(List<String> lines, BlockingQueue<byte[]> queue) {
-        lines.stream().filter(StringUtils::isNotEmpty).forEach(s -> queue.add(BytesUtil.str2Bytes(s, " ")));
+        lines.stream().filter(StringUtils::isNotEmpty).forEach(s -> {
+            try {
+                queue.put(BytesUtil.str2Bytes(s, " "));
+            } catch (InterruptedException e) {
+                LOG.error("blocking queue put error cause by {}", e.getMessage());
+            }
+        });
     }
 }
