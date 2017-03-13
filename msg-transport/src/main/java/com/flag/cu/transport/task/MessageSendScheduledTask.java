@@ -1,8 +1,12 @@
 package com.flag.cu.transport.task;
 
+import com.flag.xu.neko.cleaver.task.MessageCleaverScheduledTask;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Map;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * This is a scheduled for message cleaver and send
@@ -23,7 +27,17 @@ public class MessageSendScheduledTask implements Runnable {
 
     @Override
     public void run() {
-
+        final Map<String, BlockingQueue<byte[]>> queueMap = MessageCleaverScheduledTask.QUEUE_MAP;
+        final String realTimeMsgId = MessageCleaverScheduledTask.realTimeMsgId;
+        if (realTimeMsgId != null) {
+            BlockingQueue<byte[]> queue = queueMap.get(realTimeMsgId);
+            try {
+                byte[] bytes = queue.take();
+                ctx.writeAndFlush(bytes);
+            } catch (InterruptedException e) {
+                LOG.error("Take msg from queue has thrown an exception, cause by {}", e.getMessage());
+            }
+        }
     }
 
 }

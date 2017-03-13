@@ -31,7 +31,9 @@ public class MessageCleaverScheduledTask implements Runnable {
 
     private AbstractDiscon<Path> discon = new DefaultMessageDiacon<>();
 
-    public static final Map<String, BlockingQueue<byte[]>> queueMap = new ConcurrentHashMap<>();
+    public static final Map<String, BlockingQueue<byte[]>> QUEUE_MAP = new ConcurrentHashMap<>();
+
+    public static String realTimeMsgId;
 
     @Override
     public void run() {
@@ -43,18 +45,24 @@ public class MessageCleaverScheduledTask implements Runnable {
         }
         String propPath = properties.getProperty("path");
         String fileName = properties.getProperty("name");
-        String msgId = propPath + fileName;
-        if (queueMap.get(msgId) == null){
+        realTimeMsgId = propPath + fileName;
+        if (QUEUE_MAP.get(realTimeMsgId) == null) {
             List<String> msg = discon.unpack0(PathUtil.getPath(propPath, fileName), 17);
             BlockingQueue<byte[]> queue = new LinkedBlockingQueue<>();
             submitMsg2Queue(msg, queue);
-            queueMap.put(msgId, queue);
+            QUEUE_MAP.putIfAbsent(realTimeMsgId, queue);
         } else {
-            LOG.info("The message of the file {} already in the queue", msgId);
+            LOG.debug("The message of the file {} already in the queue", realTimeMsgId);
         }
     }
 
-    private void submitMsg2Queue(List<String> lines, BlockingQueue<byte[]> queue){
+    /**
+     * submit message to queue
+     *
+     * @param lines string list, message lines will be submitted
+     * @param queue the queue
+     */
+    private void submitMsg2Queue(List<String> lines, BlockingQueue<byte[]> queue) {
         lines.stream().filter(StringUtils::isNotEmpty).forEach(s -> queue.add(BytesUtil.str2Bytes(s, " ")));
     }
 }

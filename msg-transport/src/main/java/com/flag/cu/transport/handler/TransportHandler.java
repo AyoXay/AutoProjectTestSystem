@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * netty handler, read msg from server
@@ -30,8 +31,8 @@ public class TransportHandler extends SimpleChannelInboundHandler<Object> {
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
-        executor.submit(new MessageCleaverScheduledTask());
-        executor.submit(new MessageSendScheduledTask(ctx));
+        executor.scheduleAtFixedRate(new MessageCleaverScheduledTask(), 0, 60, TimeUnit.SECONDS);
+        executor.scheduleAtFixedRate(new MessageSendScheduledTask(ctx), 10, 5, TimeUnit.SECONDS);
     }
 
 }
