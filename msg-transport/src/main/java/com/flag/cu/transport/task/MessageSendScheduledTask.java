@@ -1,11 +1,13 @@
 package com.flag.cu.transport.task;
 
+import com.flag.cu.transport.enums.TopicEnum;
 import com.flag.xu.neko.cleaver.task.MessageCleaverScheduledTask;
 import com.flag.xu.neko.core.utils.PathUtil;
 import io.netty.channel.ChannelHandlerContext;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -14,6 +16,8 @@ import java.nio.file.Files;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * This is a scheduled for message cleaver and send
@@ -50,10 +54,15 @@ public class MessageSendScheduledTask implements Runnable {
                 byte[] bytes = queue.take();
                 ctx.writeAndFlush(bytes);
                 Producer<String, byte[]> producer = getProducer();
-                producer.send(new ProducerRecord<>("topic_T", bytes));
-                producer.close();
+                Future<RecordMetadata> future = producer.send(new ProducerRecord<>(TopicEnum.TOPIC_TE.getValue(), TopicEnum.TOPIC_TE.getValue(), bytes));
+                LOG.info("send msg to kafka complete, {}", future.get().topic());
+                if (future.isDone()) {
+                    producer.close();
+                }
             } catch (InterruptedException e) {
                 LOG.error("Take msg from queue has thrown an exception, cause by {}", e.getMessage());
+            } catch (ExecutionException e) {
+                LOG.error(e.getMessage());
             }
         }
     }
