@@ -13,6 +13,10 @@
 
     <artifactId>transport</artifactId>
 
+    <properties>
+        <kafka-clients-version>0.10.2.0</kafka-clients-version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.flag.xu.neko</groupId>
@@ -24,6 +28,12 @@
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
             <version>${netty-all-version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>${kafka-clients-version}</version>
         </dependency>
     </dependencies>
 

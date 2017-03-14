@@ -54,7 +54,7 @@ public abstract class AbstractDiscon<T extends Path> {
      * 切割消息文件，去除无用字符，取出主消息体
      * 以空行作为分隔符，存放在一个字符串list中
      *
-     * @param path 文件path
+     * @param path   文件path
      * @param offset 偏移量
      * @return 切割后字符串list
      */
