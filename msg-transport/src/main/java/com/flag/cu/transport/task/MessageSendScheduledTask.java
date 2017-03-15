@@ -16,7 +16,6 @@ import java.nio.file.Files;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 /**
@@ -44,6 +43,7 @@ public class MessageSendScheduledTask implements Runnable {
 
     @Override
     public void run() {
+        LOG.info("will send msg");
         final Map<String, BlockingQueue<byte[]>> queueMap = MessageCleaverScheduledTask.QUEUE_MAP;
         final String realTimeMsgId = MessageCleaverScheduledTask.realTimeMsgId;
         if (realTimeMsgId != null) {
@@ -53,21 +53,25 @@ public class MessageSendScheduledTask implements Runnable {
             try {
                 byte[] bytes = queue.take();
                 ctx.writeAndFlush(bytes);
-                Producer<String, byte[]> producer = getProducer();
-                Future<RecordMetadata> future = producer.send(new ProducerRecord<>(TopicEnum.TOPIC_TE.getValue(), TopicEnum.TOPIC_TE.getValue(), bytes));
-                LOG.info("send msg to kafka complete, {}", future.get().topic());
+                Producer<String, String> producer = getProducer();
+                Future<RecordMetadata> future = producer.send(new ProducerRecord<>(TopicEnum.TOPIC_TE.getValue(), TopicEnum.TOPIC_TE.getValue(), String.valueOf(bytes)), (metadata, e) -> {
+                    if (e != null){
+                        LOG.error("send msg to kafka has thrown an exception, cause by {}", e.getMessage());
+                    } else {
+                        LOG.info("send msg to kafka complete, offset is {}", metadata.offset());
+                    }
+                });
+                producer.flush();
                 if (future.isDone()) {
                     producer.close();
                 }
             } catch (InterruptedException e) {
                 LOG.error("Take msg from queue has thrown an exception, cause by {}", e.getMessage());
-            } catch (ExecutionException e) {
-                LOG.error(e.getMessage());
             }
         }
     }
 
-    private Producer<String, byte[]> getProducer(){
+    private Producer<String, String> getProducer(){
         Properties props = new Properties();
         try {
             props.load(Files.newInputStream(PathUtil.getPath(MessageCleaverScheduledTask.class, "kafka.properties")));
