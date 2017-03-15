@@ -45,7 +45,7 @@ public class Transportation {
                     @Override
                     protected void initChannel(SocketChannel ch) throws Exception {
                         ChannelPipeline pipeline = ch.pipeline();
-                        pipeline.addLast(new LoggingHandler(LogLevel.INFO))
+                        pipeline/*.addLast(new LoggingHandler(LogLevel.INFO))*/
                                 .addLast(new DataPackageEncoder())
                                 .addLast(new TransportHandler());
                     }
