@@ -1,4 +1,4 @@
-package com.flag.cu.transport.encoder;
+package com.flag.xu.transport.encoder;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;

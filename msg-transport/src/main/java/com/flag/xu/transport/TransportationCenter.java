@@ -1,4 +1,4 @@
-package com.flag.cu.transport;
+package com.flag.xu.transport;
 
 import com.flag.xu.neko.core.utils.PathUtil;
 import org.apache.commons.lang.StringUtils;
