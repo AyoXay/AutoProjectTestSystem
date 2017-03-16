@@ -4,12 +4,14 @@ import com.flag.xu.neko.core.utils.PathUtil;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Properties;
+import java.util.concurrent.Future;
 
 /**
  * kafka producer
@@ -28,8 +30,8 @@ public class KafkaProducerProxy<K, V> {
         producer = getProducer();
     }
 
-    public void send2Kafka(String topic, K key, V msg) {
-        producer.send(new ProducerRecord<>(topic, key, msg), (metadata, e) -> {
+    public Future<RecordMetadata> send2Kafka(String topic, K key, V msg) {
+        Future<RecordMetadata> future = producer.send(new ProducerRecord<>(topic, key, msg), (metadata, e) -> {
             if (e != null) {
                 LOG.error("send msg to kafka has thrown an exception, cause by {}", e.getMessage());
             } else {
@@ -37,6 +39,7 @@ public class KafkaProducerProxy<K, V> {
             }
         });
         producer.flush();
+        return future;
     }
 
     public void close() {
