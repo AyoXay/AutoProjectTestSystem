@@ -13,6 +13,7 @@
         <module>msg-cleaver</module>
         <module>msg-transport</module>
         <module>neko-core</module>
+        <module>msg-producer</module>
     </modules>
 
     <profiles>

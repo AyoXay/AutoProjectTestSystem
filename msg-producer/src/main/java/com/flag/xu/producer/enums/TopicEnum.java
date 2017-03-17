@@ -1,4 +1,4 @@
-package com.flag.cu.transport.enums;
+package com.flag.xu.producer.enums;
 
 /**
  * kafka topic enums

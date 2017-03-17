@@ -1,4 +1,4 @@
-package com.flag.cu.transport.util;
+package com.flag.xu.transport.util;
 
 /**
  * @author xuj
