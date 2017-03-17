@@ -1,12 +1,7 @@
 package com.flag.xu.transport.task;
 
-import com.flag.xu.producer.enums.TopicEnum;
 import com.flag.xu.neko.cleaver.task.MessageCleaverScheduledTask;
 import io.netty.channel.ChannelHandlerContext;
-import org.apache.kafka.clients.producer.KafkaProducer;
-import org.apache.kafka.clients.producer.Producer;
-import org.apache.kafka.clients.producer.ProducerRecord;
-import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

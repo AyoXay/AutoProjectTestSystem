@@ -14,7 +14,9 @@ import java.util.Properties;
 import java.util.concurrent.Future;
 
 /**
- * kafka producer
+ * kafka producer proxy class
+ * simple kafka producer method had defined here
+ * just provide send and close function
  *
  * @author xuj
  * @version 1.0-SNAPSHOT
@@ -30,6 +32,14 @@ public class KafkaProducerProxy<K, V> {
         producer = getProducer();
     }
 
+    /**
+     * send the msg to kafka with special topic
+     *
+     * @param topic topic which the msg will be published
+     * @param key   key of msg
+     * @param msg   msg instance
+     * @return a future of ${@link RecordMetadata}
+     */
     public Future<RecordMetadata> send2Kafka(String topic, K key, V msg) {
         Future<RecordMetadata> future = producer.send(new ProducerRecord<>(topic, key, msg), (metadata, e) -> {
             if (e != null) {
@@ -42,12 +52,20 @@ public class KafkaProducerProxy<K, V> {
         return future;
     }
 
+    /**
+     * close kafka producer instance
+     */
     public void close() {
         if (producer != null) {
             producer.close();
         }
     }
 
+    /**
+     * get kafka producer
+     *
+     * @return a producer for kafka
+     */
     private Producer<K, V> getProducer() {
         Properties props = new Properties();
         try {
