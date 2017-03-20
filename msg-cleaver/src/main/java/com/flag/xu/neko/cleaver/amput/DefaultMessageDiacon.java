@@ -1,6 +1,7 @@
 package com.flag.xu.neko.cleaver.amput;
 
-import com.sun.istack.internal.NotNull;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.Arrays;

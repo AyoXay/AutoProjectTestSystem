@@ -20,7 +20,6 @@
         <profile>
             <id>test</id>
             <properties>
-                <model>dev</model>
                 <log4j2-root-level>INFO</log4j2-root-level>
             </properties>
             <activation>
@@ -73,8 +72,5 @@
         </dependency>
 
     </dependencies>
-    <build>
-        <directory>${maven-build-directory}</directory>
-    </build>
 
 </project>
