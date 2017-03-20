@@ -5,7 +5,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Properties;
@@ -29,11 +29,11 @@ public class TransportationCenter {
         new Transportation(host, port).connect();
     }
 
-    private static void init(){
+    private static void init() {
         Path path = PathUtil.getPath(TransportationCenter.class, "host.properties");
-        try {
-            properties.load(Files.newInputStream(path));
-        } catch (IOException e) {
+        try (InputStream is = Files.newInputStream(path)) {
+            properties.load(is);
+        } catch (Exception e) {
             log.error("load properties failed, cause by {}", e.getMessage());
         }
 
