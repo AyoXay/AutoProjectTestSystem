@@ -2,6 +2,7 @@
 <Configuration status="WARN">
     <properties>
         <property name="logPath">log</property>
+        <property name="log4j2-root-level">INFO</property>
     </properties>
     <Appenders>
 
@@ -26,7 +27,7 @@
 
     </Appenders>
     <Loggers>
-        <Root level="info">
+        <Root level="${log4j2-root-level}">
             <AppenderRef ref="RollingFile" />
             <AppenderRef ref="Console" level="INFO"/>
         </Root>

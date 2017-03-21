@@ -23,10 +23,6 @@ public class MessageSendScheduledTask implements Runnable {
 
     private final ChannelHandlerContext ctx;
 
-    static{
-
-    }
-
     public MessageSendScheduledTask(ChannelHandlerContext ctx) {
         this.ctx = ctx;
     }
