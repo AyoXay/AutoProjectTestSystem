@@ -22,7 +22,7 @@ import java.util.concurrent.Future;
  * @version 1.0-SNAPSHOT
  * @since 2017-03-16-11:22
  */
-public class KafkaProducerProxy<K, V> {
+public class KafkaProducerProxy<K, V> implements AutoCloseable {
 
     private static final Logger LOG = LogManager.getLogger(KafkaProducerProxy.class);
 
@@ -55,6 +55,7 @@ public class KafkaProducerProxy<K, V> {
     /**
      * close kafka producer instance
      */
+    @Override
     public void close() {
         if (producer != null) {
             producer.close();

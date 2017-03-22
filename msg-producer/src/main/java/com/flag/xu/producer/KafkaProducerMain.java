@@ -17,12 +17,19 @@ public class KafkaProducerMain {
 
     private static final Logger LOG = LogManager.getLogger(KafkaProducerMain.class);
 
+    private static final int TIME_OUT_MILLI = 10000;
+
     public static void main(String[] args) {
-        KafkaProducerProxy<String, String> proxy = new KafkaProducerProxy<>();
-        Future<RecordMetadata> future = proxy.send2Kafka("topic_CMD", "cmd3110", "{\"uqBusinessId\":\"CP00057\",\"agrTyp\":0,\"cltDrvTme\":\"600\",\"cltRstTme\":\"100\"}");
-        if (future.isDone()){
-            proxy.close();
-            LOG.info("ok");
+        try (KafkaProducerProxy<String, String> proxy = new KafkaProducerProxy<>()) {
+            Future<RecordMetadata> future = proxy.send2Kafka("topic_CMD", "cmd3110", "{\"uqBusinessId\":\"CP00057\",\"agrTyp\":0,\"cltDrvTme\":\"600\",\"cltRstTme\":\"100\"}");
+            long start = System.currentTimeMillis();
+            while (!future.isDone()) {
+                if (System.currentTimeMillis() - start > TIME_OUT_MILLI) {
+                    LOG.error("send time out");
+                    return;
+                }
+            }
+            LOG.info("It's done");
         }
     }
 }

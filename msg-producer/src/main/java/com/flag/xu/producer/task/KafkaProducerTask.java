@@ -14,8 +14,8 @@ public class KafkaProducerTask implements Runnable {
 
     @Override
     public void run() {
-        KafkaProducerProxy<String, String> producerProxy = new KafkaProducerProxy<>();
-        producerProxy.send2Kafka(TopicEnum.TOPIC_TE.getValue(), "hello", "world");
-        producerProxy.close();
+        try (KafkaProducerProxy<String, String> producerProxy = new KafkaProducerProxy<>()) {
+            producerProxy.send2Kafka(TopicEnum.TOPIC_TE.getValue(), "hello", "world");
+        }
     }
 }
