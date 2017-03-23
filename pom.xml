@@ -14,6 +14,7 @@
         <module>msg-transport</module>
         <module>neko-core</module>
         <module>msg-producer</module>
+        <module>neko-hbase</module>
     </modules>
 
     <profiles>
