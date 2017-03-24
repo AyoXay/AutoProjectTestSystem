@@ -21,6 +21,7 @@ public class HbaseMain {
             repository.createTable(true);
         } catch (Exception e) {
             LOG.error("main error, {} ", e.getMessage());
+            e.printStackTrace();
         }
 
     }
