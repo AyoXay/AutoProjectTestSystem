@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<configuration>
+
+    <property>
+        <name>hbase.rootdir</name>
+        <value>hdfs://192.168.88.128:9000/hbase</value>
+    </property>
+
+    <property>
+        <name>zookeeper.session.timeout</name>
+        <value>60000</value>
+    </property>
+    <property>
+        <name>zookeeper.znode.parent</name>
+        <value>/hbase</value>
+    </property>
+    <property>
+        <name>zookeeper.znode.rootserver</name>
+        <value>root-region-server</value>
+    </property>
+
+    <property>
+        <name>hbase.zookeeper.quorum</name>
+        <value>192.168.88.128</value>
+    </property>
+
+    <property>
+        <name>hbase.zookeeper.property.clientPort</name>
+        <value>2181</value>
+    </property>
+</configuration>
