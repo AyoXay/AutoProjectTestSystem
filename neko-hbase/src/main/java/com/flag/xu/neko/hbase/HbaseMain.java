@@ -26,6 +26,5 @@ public class HbaseMain {
             LOG.error("main error, {} ", e.getMessage());
             e.printStackTrace();
         }
-        System.exit(0);
     }
 }

@@ -62,6 +62,7 @@ public class RepositoryService {
             }
             return table;
         }, pool);
+        pool.shutdown();
     }
 
     /**

@@ -70,8 +70,9 @@ public class TableRepository implements AutoCloseable {
             System.exit(-1);
         }
 
-        Table table = connection.getTable(name, pool);
-        visitor.visit(table);
+        try (Table table = connection.getTable(name, pool)) {
+            visitor.visit(table);
+        }
     }
 
     /**
