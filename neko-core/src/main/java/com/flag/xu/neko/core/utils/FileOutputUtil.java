@@ -6,10 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,10 +29,6 @@ public class FileOutputUtil {
      * @throws IOException
      */
     public static void output(@NotNull List<String> content, @NotNull String fileName, boolean cover) throws IOException {
-        if (fileName == null || content == null) {
-            throw new NullPointerException("content or fileName is null, please check it");
-        }
-
         Path path = PathUtil.getPath(FileOutputUtil.class, fileName);
         if (path == null) {
             path = Paths.get(PathUtil.getPath(FileOutputUtil.class, ".").toString(), fileName);
@@ -45,7 +38,7 @@ public class FileOutputUtil {
             return;
         }
 
-        Files.write(path, content, Charset.forName("utf8"), StandardOpenOption.TRUNCATE_EXISTING);
+        output(content, path, cover);
         LOG.info("output success the path is " + path.getParent().toString());
     }
 
@@ -58,10 +51,53 @@ public class FileOutputUtil {
      * @throws IOException
      */
     public static void output(@NotNull String content, @NotNull String fileName, boolean cover) throws IOException {
-        if (fileName == null || content == null) {
-            throw new NullPointerException("fileName or content is null, please check it");
-        }
         List<String> write = Arrays.asList(content.split(System.getProperty("line.separator")));
         output(write, fileName, cover);
+    }
+
+    /**
+     * output string lines to file
+     *
+     * @param content content list
+     * @param path    file's path
+     * @param cover   cover or not
+     * @throws IOException
+     */
+    public static void output(@NotNull List<String> content, @NotNull Path path, boolean cover) throws IOException {
+        if (Files.isDirectory(path) || !Files.isWritable(path)) {
+            throw new NoSuchFileException(path.toString());
+        }
+        if (cover) {
+            Files.write(path, content, Charset.defaultCharset(), StandardOpenOption.TRUNCATE_EXISTING);
+        }
+    }
+
+    /**
+     * output content to file by append
+     *
+     * @param content  content list
+     * @param pathName the file's path
+     * @throws IOException
+     */
+    public static void appendOutput(@NotNull List<String> content, @NotNull String pathName) throws IOException {
+        Path path = Paths.get(pathName);
+        if (!Files.exists(path)) {
+            Files.createFile(path);
+        }
+        appendOutput(content, path);
+    }
+
+    /**
+     * output content to file by append
+     *
+     * @param content content list
+     * @param path    the file's path
+     * @throws IOException
+     */
+    public static void appendOutput(@NotNull List<String> content, @NotNull Path path) throws IOException {
+        if (Files.isDirectory(path) || !Files.isWritable(path)) {
+            throw new NoSuchFileException(path.toString());
+        }
+        Files.write(path, content, Charset.defaultCharset(), StandardOpenOption.APPEND);
     }
 }
