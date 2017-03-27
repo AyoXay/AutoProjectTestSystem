@@ -1,6 +1,7 @@
 package com.flag.xu.neko.hbase;
 
 import com.flag.xu.neko.hbase.repo.TableRepository;
+import com.flag.xu.neko.hbase.service.RepositoryService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,11 +19,13 @@ public class HbaseMain {
     public static void main(String[] args) {
         LOG.info("hbase access main start");
         try (TableRepository repository = new TableRepository()) {
-            repository.createTable(true);
+            repository.createTable();
+            RepositoryService service = RepositoryService.build();
+            service.saveData();
         } catch (Exception e) {
             LOG.error("main error, {} ", e.getMessage());
             e.printStackTrace();
         }
-
+        System.exit(0);
     }
 }

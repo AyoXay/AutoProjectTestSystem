@@ -1,18 +1,17 @@
 package com.flag.xu.neko.hbase.repo;
 
+import com.flag.xu.neko.hbase.visitor.IVisitor;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.HColumnDescriptor;
-import org.apache.hadoop.hbase.HTableDescriptor;
-import org.apache.hadoop.hbase.TableName;
-import org.apache.hadoop.hbase.client.Admin;
-import org.apache.hadoop.hbase.client.Connection;
-import org.apache.hadoop.hbase.client.ConnectionFactory;
+import org.apache.hadoop.hbase.*;
+import org.apache.hadoop.hbase.client.*;
 import org.apache.hadoop.hbase.io.compress.Compression;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * hbase table repository
@@ -45,10 +44,51 @@ public class TableRepository implements AutoCloseable {
         init();
     }
 
-    public void saveObjToTable(Object obj) {
-
+    /**
+     * visit hbase table and operate table
+     * this file will open single thread for execute operation
+     *
+     * @param visitor the table visitor
+     * @throws IOException
+     */
+    public void visitTable(IVisitor<Table> visitor) throws IOException {
+        ExecutorService pool = Executors.newSingleThreadExecutor();
+        visitTable(visitor, pool);
     }
 
+    /**
+     * visit hbase table and operate table
+     *
+     * @param visitor the table visitor
+     * @param pool    execute pool
+     * @throws IOException
+     */
+    public void visitTable(IVisitor<Table> visitor, @NotNull ExecutorService pool) throws IOException {
+        TableName name = TableName.valueOf(tableName);
+        if (!admin.tableExists(name)) {
+            LOG.error("table {} does not exist", tableName);
+            System.exit(-1);
+        }
+
+        Table table = connection.getTable(name, pool);
+        visitor.visit(table);
+    }
+
+    /**
+     * create table
+     *
+     * @throws IOException
+     */
+    public void createTable() throws IOException {
+        createTable(false);
+    }
+
+    /**
+     * create hbase table
+     *
+     * @param override override or not
+     * @throws IOException
+     */
     public void createTable(boolean override) throws IOException {
         HTableDescriptor table = new HTableDescriptor(TableName.valueOf(tableName));
         table.addFamily(new HColumnDescriptor(cfName).setCompressionType(Compression.Algorithm.GZ));
@@ -65,12 +105,30 @@ public class TableRepository implements AutoCloseable {
         }
     }
 
+    /**
+     * set special table name
+     *
+     * @param tableName table name will be operated
+     */
     public void setTableName(String tableName) {
         this.tableName = tableName;
     }
 
+    /**
+     * set special column family
+     *
+     * @param cfName column family name
+     */
     public void setCfName(String cfName) {
         this.cfName = cfName;
+    }
+
+    public String getTableName() {
+        return tableName;
+    }
+
+    public String getCfName() {
+        return cfName;
     }
 
     @Override
@@ -84,6 +142,9 @@ public class TableRepository implements AutoCloseable {
         }
     }
 
+    /**
+     * init repository
+     */
     private void init() {
         try {
             connection = ConnectionFactory.createConnection(conf);

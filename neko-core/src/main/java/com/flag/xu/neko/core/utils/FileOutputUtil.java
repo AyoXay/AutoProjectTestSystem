@@ -1,5 +1,7 @@
 package com.flag.xu.neko.core.utils;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -19,6 +21,8 @@ import java.util.List;
  */
 public class FileOutputUtil {
 
+    private static final Logger LOG = LogManager.getLogger(FileOutputUtil.class);
+
     /**
      * output string lines to file
      *
@@ -37,12 +41,12 @@ public class FileOutputUtil {
             path = Paths.get(PathUtil.getPath(FileOutputUtil.class, ".").toString(), fileName);
             Files.createFile(path);
         } else if (!cover) {
-            System.out.println("file already exist");
+            LOG.warn("file already exist");
             return;
         }
 
         Files.write(path, content, Charset.forName("utf8"), StandardOpenOption.TRUNCATE_EXISTING);
-        System.out.println("output success the path is " + path.getParent().toString());
+        LOG.info("output success the path is " + path.getParent().toString());
     }
 
     /**
