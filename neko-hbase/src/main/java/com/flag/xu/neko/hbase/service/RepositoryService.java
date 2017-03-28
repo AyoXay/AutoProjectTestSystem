@@ -69,6 +69,11 @@ public class RepositoryService {
         FileOutputUtil.appendOutput(plates, "./copy");
     }
 
+    /**
+     * scan method for test
+     *
+     * @throws IOException
+     */
     public void scanData() throws IOException {
         LOG.info("scan ht data start");
         long startTime = System.currentTimeMillis();
@@ -77,8 +82,18 @@ public class RepositoryService {
         try {
             repository.visitTable(table -> {
                 Scan scan = new Scan();
-                scan.addColumn(Bytes.toBytes(repository.getCfName()), Bytes.toBytes("9"));
+
+//                scan.addColumn(Bytes.toBytes(repository.getCfName()), Bytes.toBytes("9"));
                 scan.addFamily(Bytes.toBytes(repository.getCfName()));
+
+//                FilterList filterList = new FilterList(FilterList.Operator.MUST_PASS_ONE);
+//                filterList.addFilter(new SingleColumnValueFilter(Bytes.toBytes(repository.getCfName()), Bytes.toBytes("9"), CompareFilter.CompareOp.EQUAL, Bytes.toBytes("6cec8396-289f-4141-8fc7-9124005dbcbc")));
+//                filterList.addFilter(new SingleColumnValueFilter(Bytes.toBytes(repository.getCfName()), Bytes.toBytes("8"), CompareFilter.CompareOp.EQUAL, Bytes.toBytes("1db74629-bdb0-47cb-a0f7-d717f958dc79")));
+//                filterList.addFilter(new SingleColumnValueFilter(Bytes.toBytes(repository.getCfName()), Bytes.toBytes("7"), CompareFilter.CompareOp.EQUAL, Bytes.toBytes("2943dc0f-eb55-4afa-a825-1eb4894b3312")));
+//                filterList.addFilter(new SingleColumnValueFilter(Bytes.toBytes(repository.getCfName()), Bytes.toBytes("6"), CompareFilter.CompareOp.EQUAL, Bytes.toBytes("e2e686a0-a1ff-4b48-8287-b2b2daff4387")));
+//                filterList.addFilter(new SingleColumnValueFilter(Bytes.toBytes(repository.getCfName()), Bytes.toBytes("5"), CompareFilter.CompareOp.EQUAL, Bytes.toBytes("6a18e26b-4aee-4dbf-9643-7b5b0218bd39")));
+//                scan.setFilter(filterList);
+//                scan.setFilter(new SingleColumnValueFilter(Bytes.toBytes(repository.getCfName()), Bytes.toBytes("9"), CompareFilter.CompareOp.EQUAL, Bytes.toBytes("6cec8396-289f-4141-8fc7-9124005dbcbc")));
                 try {
                     ResultScanner results = table.getScanner(scan);
                     results.forEach(result -> {
@@ -97,12 +112,6 @@ public class RepositoryService {
         } finally {
             pool.shutdown();
         }
-        int size = resultList.size();
-        List<String> realResult = new ArrayList<>(10);
-        for (int i = 0; i < 10; i++) {
-            realResult.add(resultList.get((size / 10) * i).get(String.valueOf(i)));
-        }
-        FileOutputUtil.output(realResult, "result", true);
         LOG.info("scan data end, data size is {}, cast time {}", resultList.size(), System.currentTimeMillis() - startTime);
     }
 
