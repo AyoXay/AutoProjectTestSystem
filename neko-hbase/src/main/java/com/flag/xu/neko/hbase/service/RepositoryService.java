@@ -3,6 +3,8 @@ package com.flag.xu.neko.hbase.service;
 import com.flag.xu.neko.core.utils.FileOutputUtil;
 import com.flag.xu.neko.hbase.repo.TableRepository;
 import org.apache.hadoop.hbase.client.Put;
+import org.apache.hadoop.hbase.client.ResultScanner;
+import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.util.Bytes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,9 +12,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoField;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -27,9 +27,11 @@ public class RepositoryService {
 
     private static final Logger LOG = LogManager.getLogger(RepositoryService.class);
 
-    private TableRepository repository = new TableRepository();
+    private TableRepository repository;
 
     private List<String> plates;
+
+    private RepositoryService(){}
 
     /**
      * save data to ht, will save million row random data
@@ -37,10 +39,11 @@ public class RepositoryService {
      * @throws IOException
      */
     public void saveData() throws IOException {
+        LOG.info("save data start");
         ExecutorService pool = Executors.newFixedThreadPool(20);
         List<Put> puts = new ArrayList<>();
         repository.visitTable((table) -> {
-            for (int i = 0; i < 1000000; i++) {
+            for (int i = 0; i < 100000; i++) {
                 byte[] row = Bytes.add(Bytes.toBytes(plates.get(i % plates.size())), Bytes.toBytes(Integer.MAX_VALUE - LocalDateTime.now().get(ChronoField.MILLI_OF_DAY)));
                 Put put = new Put(row);
                 for (int j = 0; j < 10; j++) {
@@ -63,6 +66,44 @@ public class RepositoryService {
             return table;
         }, pool);
         pool.shutdown();
+        FileOutputUtil.appendOutput(plates, "./copy");
+    }
+
+    public void scanData() throws IOException {
+        LOG.info("scan ht data start");
+        long startTime = System.currentTimeMillis();
+        ExecutorService pool = Executors.newFixedThreadPool(5);
+        List<Map<String, String>> resultList = new ArrayList<>();
+        try {
+            repository.visitTable(table -> {
+                Scan scan = new Scan();
+                scan.addColumn(Bytes.toBytes(repository.getCfName()), Bytes.toBytes("9"));
+                scan.addFamily(Bytes.toBytes(repository.getCfName()));
+                try {
+                    ResultScanner results = table.getScanner(scan);
+                    results.forEach(result -> {
+                        Map<String, String> map = new HashMap<>();
+                        result.getFamilyMap(Bytes.toBytes(repository.getCfName())).forEach((k, v) -> {
+                            map.put(Bytes.toString(k), Bytes.toString(v));
+                        });
+                        resultList.add(map);
+                    });
+                } catch (IOException e) {
+                    LOG.error("scan data error {}", e.getMessage());
+                    e.printStackTrace();
+                }
+                return table;
+            }, pool);
+        } finally {
+            pool.shutdown();
+        }
+        int size = resultList.size();
+        List<String> realResult = new ArrayList<>(10);
+        for (int i = 0; i < 10; i++) {
+            realResult.add(resultList.get((size / 10) * i).get(String.valueOf(i)));
+        }
+        FileOutputUtil.output(realResult, "result", true);
+        LOG.info("scan data end, data size is {}, cast time {}", resultList.size(), System.currentTimeMillis() - startTime);
     }
 
     /**
@@ -72,7 +113,15 @@ public class RepositoryService {
      * @throws IOException
      */
     public static RepositoryService build() throws IOException {
-        return build(10);
+        return build(10, new TableRepository());
+    }
+
+    public static RepositoryService build(int platLength) throws IOException {
+        return build(platLength, new TableRepository());
+    }
+
+    public static RepositoryService build(TableRepository repository) throws IOException {
+        return build(10, repository);
     }
 
     /**
@@ -82,13 +131,13 @@ public class RepositoryService {
      * @return instance of RepositoryService
      * @throws IOException
      */
-    public static RepositoryService build(int platLength) throws IOException {
+    public static RepositoryService build(int platLength, TableRepository repository) throws IOException {
         RepositoryService repositoryService = new RepositoryService();
+        repositoryService.repository = repository;
         repositoryService.plates = new ArrayList<>(platLength);
         for (int i = 0; i < platLength; i++) {
             repositoryService.plates.add(repositoryService.random());
         }
-        FileOutputUtil.output(repositoryService.plates, "copy", true);
         return repositoryService;
     }
 

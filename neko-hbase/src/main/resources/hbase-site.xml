@@ -8,8 +8,18 @@
     </property>
 
     <property>
+        <name>hbase.rpc.timeout</name>
+        <value>600000</value>
+    </property>
+
+    <property>
+        <name>hbase.client.scanner.timeout.period</name>
+        <value>600000</value>
+    </property>
+
+    <property>
         <name>zookeeper.session.timeout</name>
-        <value>60000</value>
+        <value>600000</value>
     </property>
     <property>
         <name>zookeeper.znode.parent</name>
