@@ -19,9 +19,11 @@ public class HbaseMain {
     public static void main(String[] args) {
         LOG.info("hbase access main start");
         try (TableRepository repository = new TableRepository()) {
+            repository.setTableName("mini_table");
             repository.createTable();
-            RepositoryService service = RepositoryService.build();
-            service.saveData();
+            RepositoryService service = RepositoryService.build(repository);
+//            service.saveData();
+            service.scanData();
         } catch (Exception e) {
             LOG.error("main error, {} ", e.getMessage());
             e.printStackTrace();
