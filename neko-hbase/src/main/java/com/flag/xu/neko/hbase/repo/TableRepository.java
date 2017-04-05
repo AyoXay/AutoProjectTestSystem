@@ -24,23 +24,11 @@ public class TableRepository implements AutoCloseable {
 
     private static final Logger LOG = LogManager.getLogger(TableRepository.class);
 
-    private String tableName = "million_row";
-
-    private String cfName = "cf";
-
     private Configuration conf = HBaseConfiguration.create();
-
-    private Admin admin;
 
     private Connection connection;
 
     public TableRepository() {
-        init();
-    }
-
-    public TableRepository(String tableName, String cfName) {
-        this.tableName = tableName;
-        this.cfName = cfName;
         init();
     }
 
@@ -51,9 +39,9 @@ public class TableRepository implements AutoCloseable {
      * @param visitor the table visitor
      * @throws IOException
      */
-    public void visitTable(IVisitor<Table> visitor) throws IOException {
+    public void visitTable(String tableName, IVisitor<Table> visitor) throws IOException {
         ExecutorService pool = Executors.newSingleThreadExecutor();
-        visitTable(visitor, pool);
+        visitTable(tableName, visitor, pool);
     }
 
     /**
@@ -63,11 +51,13 @@ public class TableRepository implements AutoCloseable {
      * @param pool    execute pool
      * @throws IOException
      */
-    public void visitTable(IVisitor<Table> visitor, @NotNull ExecutorService pool) throws IOException {
+    public void visitTable(String tableName, IVisitor<Table> visitor, @NotNull ExecutorService pool) throws IOException {
         TableName name = TableName.valueOf(tableName);
-        if (!admin.tableExists(name)) {
-            LOG.error("table {} does not exist", tableName);
-            System.exit(-1);
+        try (Admin admin = connection.getAdmin()) {
+            if (!admin.tableExists(name)) {
+                LOG.error("table {} does not exist", tableName);
+                System.exit(-1);
+            }
         }
 
         try (Table table = connection.getTable(name, pool)) {
@@ -80,8 +70,8 @@ public class TableRepository implements AutoCloseable {
      *
      * @throws IOException
      */
-    public void createTable() throws IOException {
-        createTable(false);
+    public void createTable(String tableName, String cfName) throws IOException {
+        createTable(tableName, cfName, false);
     }
 
     /**
@@ -90,54 +80,26 @@ public class TableRepository implements AutoCloseable {
      * @param override override or not
      * @throws IOException
      */
-    public void createTable(boolean override) throws IOException {
+    public void createTable(String tableName, String cfName, boolean override) throws IOException {
         HTableDescriptor table = new HTableDescriptor(TableName.valueOf(tableName));
         table.addFamily(new HColumnDescriptor(cfName).setCompressionType(Compression.Algorithm.GZ));
-        if (admin.tableExists(table.getTableName())) {
-            if (override) {
-                admin.disableTable(table.getTableName());
-                admin.deleteTable(table.getTableName());
-                admin.createTable(table);
+        try (Admin admin = connection.getAdmin()) {
+            if (admin.tableExists(table.getTableName())) {
+                if (override) {
+                    admin.disableTable(table.getTableName());
+                    admin.deleteTable(table.getTableName());
+                    admin.createTable(table);
+                } else {
+                    LOG.warn("table {} already exists", tableName);
+                }
             } else {
-                LOG.warn("table {} already exists", tableName);
+                admin.createTable(table);
             }
-        } else {
-            admin.createTable(table);
         }
-    }
-
-    /**
-     * set special table name
-     *
-     * @param tableName table name will be operated
-     */
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
-    }
-
-    /**
-     * set special column family
-     *
-     * @param cfName column family name
-     */
-    public void setCfName(String cfName) {
-        this.cfName = cfName;
-    }
-
-    public String getTableName() {
-        return tableName;
-    }
-
-    public String getCfName() {
-        return cfName;
     }
 
     @Override
     public void close() throws Exception {
-        if (admin != null) {
-            admin.close();
-        }
-
         if (connection != null) {
             connection.close();
         }
@@ -149,7 +111,6 @@ public class TableRepository implements AutoCloseable {
     private void init() {
         try {
             connection = ConnectionFactory.createConnection(conf);
-            admin = connection.getAdmin();
         } catch (IOException e) {
             LOG.error("connect hbase error {}", e.getMessage());
         }
