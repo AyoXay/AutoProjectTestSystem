@@ -31,6 +31,10 @@ public class RepositoryService {
 
     private List<String> plates;
 
+    private String cfName = "cf";
+
+    private String tableName = "mini_table";
+
     private RepositoryService(){}
 
     /**
@@ -42,12 +46,12 @@ public class RepositoryService {
         LOG.info("save data start");
         ExecutorService pool = Executors.newFixedThreadPool(20);
         List<Put> puts = new ArrayList<>();
-        repository.visitTable((table) -> {
+        repository.visitTable(tableName, table -> {
             for (int i = 0; i < 100000; i++) {
                 byte[] row = Bytes.add(Bytes.toBytes(plates.get(i % plates.size())), Bytes.toBytes(Integer.MAX_VALUE - LocalDateTime.now().get(ChronoField.MILLI_OF_DAY)));
                 Put put = new Put(row);
                 for (int j = 0; j < 10; j++) {
-                    put.addColumn(Bytes.toBytes(repository.getCfName()), Bytes.toBytes(String.valueOf(j)), Bytes.toBytes(UUID.randomUUID().toString()));
+                    put.addColumn(Bytes.toBytes(cfName), Bytes.toBytes(String.valueOf(j)), Bytes.toBytes(UUID.randomUUID().toString()));
                 }
                 puts.add(put);
                 try {
@@ -80,11 +84,11 @@ public class RepositoryService {
         ExecutorService pool = Executors.newFixedThreadPool(5);
         List<Map<String, String>> resultList = new ArrayList<>();
         try {
-            repository.visitTable(table -> {
+            repository.visitTable(tableName, table -> {
                 Scan scan = new Scan();
 
 //                scan.addColumn(Bytes.toBytes(repository.getCfName()), Bytes.toBytes("9"));
-                scan.addFamily(Bytes.toBytes(repository.getCfName()));
+                scan.addFamily(Bytes.toBytes(cfName));
 
 //                FilterList filterList = new FilterList(FilterList.Operator.MUST_PASS_ONE);
 //                filterList.addFilter(new SingleColumnValueFilter(Bytes.toBytes(repository.getCfName()), Bytes.toBytes("9"), CompareFilter.CompareOp.EQUAL, Bytes.toBytes("6cec8396-289f-4141-8fc7-9124005dbcbc")));
@@ -98,7 +102,7 @@ public class RepositoryService {
                     ResultScanner results = table.getScanner(scan);
                     results.forEach(result -> {
                         Map<String, String> map = new HashMap<>();
-                        result.getFamilyMap(Bytes.toBytes(repository.getCfName())).forEach((k, v) -> {
+                        result.getFamilyMap(Bytes.toBytes(cfName)).forEach((k, v) -> {
                             map.put(Bytes.toString(k), Bytes.toString(v));
                         });
                         resultList.add(map);
@@ -174,4 +178,11 @@ public class RepositoryService {
         return (int) Math.round(Math.random() * 100) % CHARS.length;
     }
 
+    public String getCfName() {
+        return cfName;
+    }
+
+    public void setCfName(String cfName) {
+        this.cfName = cfName;
+    }
 }
