@@ -15,8 +15,7 @@ public class LongCast extends ParamCast {
     public Object paramCast(Field field, Element foo, Method method) throws AnnotationConflictException {
         Class fieldType = field.getType();
         if (fieldType.equals(StandardDataType.LONG.getType()) || fieldType.equals(StandardDataType.LONG_CLASS.getType())) {
-            Long param = Long.valueOf(foo.elementText(getParamName(field, method)) == null ? "0" : foo.elementText(getParamName(field, method)));
-            return param;
+            return Long.valueOf(foo.elementText(getParamName(field, method)) == null ? "0" : foo.elementText(getParamName(field, method)));
         } else {
             return new FloatCast().paramCast(field, foo, method);
         }
